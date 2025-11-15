@@ -2,7 +2,7 @@ import Axios from 'axios';
 
 export const httpClient = Axios.create({
   baseURL: import.meta.env.VITE_APP_BASE_URL,
-  timeout: 10000,
+  timeout: 60000,
   headers: {
     'Content-Type': 'application/json',
     'ngrok-skip-browser-warning': '1'

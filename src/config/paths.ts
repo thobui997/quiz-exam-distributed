@@ -15,6 +15,10 @@ export const paths = {
     monHoc: {
       path: '/mon-hoc',
       getHref: () => '/mon-hoc'
+    },
+    khoa: {
+      path: '/khoa',
+      getHref: () => '/khoa'
     }
   }
 } as const;
