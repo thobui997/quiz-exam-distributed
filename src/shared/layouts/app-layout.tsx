@@ -1,17 +1,20 @@
 import menuList from '@app/config/menu';
-import { Affix, Layout, theme } from 'antd';
+import { useAuth } from '@app/context/auth-context';
+import { Affix, Avatar, Button, Dropdown, Layout, Space, theme } from 'antd';
+import { LogOut, User } from 'lucide-react';
 import { useMemo, useState } from 'react';
 import { Outlet, useLocation } from 'react-router';
 import './app-layout.scss';
 import MenuComponent from './menu';
 
-const { Content, Sider } = Layout;
+const { Content, Header, Sider } = Layout;
 
 const AppLayout = () => {
   const {
     token: { colorBgContainer }
   } = theme.useToken();
   const location = useLocation();
+  const { userInfo, logoutAction } = useAuth();
 
   const [openKey, setOpenkey] = useState<string>('');
   const [selectedKey, setSelectedKey] = useState<string>(location.pathname);
@@ -27,6 +30,31 @@ const AppLayout = () => {
     }));
   }, []);
 
+  const userMenuItems = [
+    {
+      key: 'profile',
+      label: (
+        <div className='flex items-center gap-2'>
+          <User size={16} />
+          <span>Thông tin cá nhân</span>
+        </div>
+      )
+    },
+    {
+      type: 'divider' as const
+    },
+    {
+      key: 'logout',
+      label: (
+        <div className='flex items-center gap-2'>
+          <LogOut size={16} />
+          <span>Đăng xuất</span>
+        </div>
+      ),
+      onClick: logoutAction
+    }
+  ];
+
   return (
     <Layout className='layout-page'>
       <Affix offsetTop={0}>
@@ -40,9 +68,9 @@ const AppLayout = () => {
           <div className='logo-container'>
             <div className='logo-vertical'>
               <div className='logo-image'>
-                <img src='/images/bus.png' alt='logo' width={20} height={20} />
+                <span className='text-white font-bold'>QE</span>
               </div>
-              <div className='logo-text'>FleetGo System</div>
+              <div className='logo-text'>Quiz Exam</div>
             </div>
           </div>
           <MenuComponent
@@ -56,7 +84,24 @@ const AppLayout = () => {
       </Affix>
 
       <Layout>
-        <Content className='!m-6 overflow-y-auto h-[calc(100dvh_-_32px_-_48px)]'>
+        <Header style={{ background: colorBgContainer, padding: '0 24px' }} className='layout-page-header'>
+          <div></div>
+          <div className='layout-page-header-actions'>
+            <Dropdown menu={{ items: userMenuItems }} placement='bottomRight'>
+              <Space className='cursor-pointer'>
+                <Avatar style={{ backgroundColor: '#87d068' }}>
+                  {userInfo?.ho?.charAt(0)}
+                  {userInfo?.ten?.charAt(0)}
+                </Avatar>
+                <span className='font-medium'>
+                  {userInfo?.ho} {userInfo?.ten}
+                </span>
+              </Space>
+            </Dropdown>
+          </div>
+        </Header>
+
+        <Content className='!m-6 overflow-y-auto h-[calc(100dvh_-_32px_-_64px)]'>
           <Outlet />
         </Content>
       </Layout>
