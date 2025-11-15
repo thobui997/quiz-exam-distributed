@@ -1,5 +1,6 @@
 import KhoaRoute from '@app/app/pages/khoa-route';
 import LoginRoute from '@app/app/pages/login-route';
+import LopRoute from '@app/app/pages/lop-route';
 import MonHocRoute from '@app/app/pages/mon-hoc-route';
 import RegisterRoute from '@app/app/pages/register-route';
 import { paths } from '@app/config/paths';
@@ -29,6 +30,7 @@ export const AppRouter = () => {
           <Route index element={<DashboardNavigate />} />
           <Route path={paths.app.monHoc.path} element={<MonHocRoute />} />
           <Route path={paths.app.khoa.path} element={<KhoaRoute />} />
+          <Route path={paths.app.lop.path} element={<LopRoute />} />
         </Route>
       </Route>
     </Routes>

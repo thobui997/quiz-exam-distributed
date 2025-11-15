@@ -19,6 +19,10 @@ export const paths = {
     khoa: {
       path: '/khoa',
       getHref: () => '/khoa'
+    },
+    lop: {
+      path: '/lop',
+      getHref: () => '/lop'
     }
   }
 } as const;

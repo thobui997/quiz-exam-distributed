@@ -1,6 +1,6 @@
 import { paths } from '@app/config/paths';
 import { MenuList } from '@app/shared/types';
-import { BookOpen, Building2 } from 'lucide-react';
+import { BookOpen, Building2, Users } from 'lucide-react';
 import React from 'react';
 
 const menuList: MenuList = [
@@ -15,6 +15,12 @@ const menuList: MenuList = [
     label: 'Quản lý khoa',
     path: paths.app.khoa.path,
     icon: React.createElement(Building2, { size: 20 })
+  },
+  {
+    code: paths.app.lop.path,
+    label: 'Quản lý lớp',
+    path: paths.app.lop.path,
+    icon: React.createElement(Users, { size: 20 })
   }
 ];
 
