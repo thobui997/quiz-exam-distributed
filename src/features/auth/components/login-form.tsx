@@ -35,7 +35,7 @@ const LoginForm = () => {
           Đăng nhập
         </Button>
 
-        <div className='text-center mt-4'>
+        <div className='text-center !mt-4'>
           <span className='text-gray-600'>Chưa có tài khoản? </span>
           <a onClick={() => navigate('/register')} className='text-blue-600 hover:text-blue-700 cursor-pointer'>
             Đăng ký ngay

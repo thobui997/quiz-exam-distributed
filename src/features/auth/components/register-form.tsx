@@ -115,7 +115,7 @@ const RegisterForm = () => {
           Đăng ký
         </Button>
 
-        <div className='text-center mt-4'>
+        <div className='text-center !mt-4'>
           <span className='text-gray-600'>Đã có tài khoản? </span>
           <a onClick={() => navigate('/login')} className='text-blue-600 hover:text-blue-700 cursor-pointer'>
             Đăng nhập ngay
