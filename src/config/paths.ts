@@ -31,6 +31,10 @@ export const paths = {
     boDe: {
       path: '/bo-de',
       getHref: () => '/bo-de'
+    },
+    giaoVienDangKy: {
+      path: '/giao-vien-dang-ky',
+      getHref: () => '/giao-vien-dang-ky'
     }
   }
 } as const;

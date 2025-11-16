@@ -1,6 +1,6 @@
 import { paths } from '@app/config/paths';
 import { MenuList } from '@app/shared/types';
-import { BookOpen, FileQuestion, FolderTree, GraduationCap, UserCheck } from 'lucide-react';
+import { BookOpen, FolderTree, GraduationCap, UserCheck, ClipboardList, FileQuestion } from 'lucide-react';
 import React from 'react';
 
 const menuList: MenuList = [
@@ -33,6 +33,12 @@ const menuList: MenuList = [
     label: 'Quản lý Bộ đề',
     path: paths.app.boDe.path,
     icon: React.createElement(FileQuestion, { size: 20 })
+  },
+  {
+    code: paths.app.giaoVienDangKy.path,
+    label: 'Chuẩn bị thi',
+    path: paths.app.giaoVienDangKy.path,
+    icon: React.createElement(ClipboardList, { size: 20 })
   }
 ];
 
