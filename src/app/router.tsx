@@ -1,7 +1,9 @@
+import GiaoVienRoute from '@app/app/pages/giao-vien-route';
 import KhoaLopRoute from '@app/app/pages/khoa-lop-route';
 import LoginRoute from '@app/app/pages/login-route';
 import MonHocRoute from '@app/app/pages/mon-hoc-route';
 import RegisterRoute from '@app/app/pages/register-route';
+import SinhVienRoute from '@app/app/pages/sinh-vien-route';
 import { paths } from '@app/config/paths';
 import { useAuth } from '@app/context/auth-context';
 import AppLayout from '@app/shared/layouts/app-layout';
@@ -29,6 +31,8 @@ export const AppRouter = () => {
           <Route index element={<DashboardNavigate />} />
           <Route path={paths.app.monHoc.path} element={<MonHocRoute />} />
           <Route path={paths.app.khoaLop.path} element={<KhoaLopRoute />} />
+          <Route path={paths.app.sinhVien.path} element={<SinhVienRoute />} />
+          <Route path={paths.app.giaoVien.path} element={<GiaoVienRoute />} />
         </Route>
       </Route>
     </Routes>
