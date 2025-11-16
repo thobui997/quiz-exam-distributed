@@ -16,13 +16,9 @@ export const paths = {
       path: '/mon-hoc',
       getHref: () => '/mon-hoc'
     },
-    khoa: {
-      path: '/khoa',
-      getHref: () => '/khoa'
-    },
-    lop: {
-      path: '/lop',
-      getHref: () => '/lop'
+    khoaLop: {
+      path: '/khoa-lop',
+      getHref: () => '/khoa-lop'
     }
   }
 } as const;

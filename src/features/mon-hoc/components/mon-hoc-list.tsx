@@ -48,8 +48,8 @@ const MonHocList = () => {
   ];
 
   return (
-    <div className='p-6'>
-      <div className='mb-4 flex justify-between items-center'>
+    <div className='!p-6'>
+      <div className='!mb-4 flex justify-between items-center'>
         <h2 className='text-2xl font-semibold'>Quản lý môn học</h2>
         <Space>
           <Button icon={<ReloadOutlined />} onClick={() => refetch()}>
@@ -84,7 +84,7 @@ const MonHocList = () => {
         okText='Thêm'
         cancelText='Hủy'
       >
-        <Form form={form} layout='vertical' className='mt-4'>
+        <Form form={form} layout='vertical' className='!mt-4'>
           <Form.Item
             label='Mã môn học'
             name='mamh'

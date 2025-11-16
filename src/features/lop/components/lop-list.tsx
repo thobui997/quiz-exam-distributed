@@ -157,8 +157,8 @@ const LopList = () => {
   ];
 
   return (
-    <div className='p-6'>
-      <div className='mb-4 flex justify-between items-center'>
+    <div className='!p-6'>
+      <div className='!mb-4 flex justify-between items-center'>
         <div className='flex items-center gap-4'>
           <h2 className='text-2xl font-semibold'>Quản lý lớp</h2>
           <Select
@@ -217,7 +217,7 @@ const LopList = () => {
         okText={editingLop ? 'Cập nhật' : 'Thêm'}
         cancelText='Hủy'
       >
-        <Form form={form} layout='vertical' className='mt-4'>
+        <Form form={form} layout='vertical' className='!mt-4'>
           <Form.Item
             label='Mã lớp'
             name='malop'

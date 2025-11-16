@@ -1,6 +1,6 @@
 import { paths } from '@app/config/paths';
 import { MenuList } from '@app/shared/types';
-import { BookOpen, Building2, Users } from 'lucide-react';
+import { BookOpen, FolderTree } from 'lucide-react';
 import React from 'react';
 
 const menuList: MenuList = [
@@ -11,16 +11,10 @@ const menuList: MenuList = [
     icon: React.createElement(BookOpen, { size: 20 })
   },
   {
-    code: paths.app.khoa.path,
-    label: 'Quản lý khoa',
-    path: paths.app.khoa.path,
-    icon: React.createElement(Building2, { size: 20 })
-  },
-  {
-    code: paths.app.lop.path,
-    label: 'Quản lý lớp',
-    path: paths.app.lop.path,
-    icon: React.createElement(Users, { size: 20 })
+    code: paths.app.khoaLop.path,
+    label: 'Quản lý Khoa - Lớp',
+    path: paths.app.khoaLop.path,
+    icon: React.createElement(FolderTree, { size: 20 })
   }
 ];
 
