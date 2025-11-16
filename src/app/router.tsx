@@ -1,3 +1,4 @@
+import BoDeRoute from '@app/app/pages/bo-de-route';
 import GiaoVienRoute from '@app/app/pages/giao-vien-route';
 import KhoaLopRoute from '@app/app/pages/khoa-lop-route';
 import LoginRoute from '@app/app/pages/login-route';
@@ -33,6 +34,7 @@ export const AppRouter = () => {
           <Route path={paths.app.khoaLop.path} element={<KhoaLopRoute />} />
           <Route path={paths.app.sinhVien.path} element={<SinhVienRoute />} />
           <Route path={paths.app.giaoVien.path} element={<GiaoVienRoute />} />
+          <Route path={paths.app.boDe.path} element={<BoDeRoute />} />
         </Route>
       </Route>
     </Routes>

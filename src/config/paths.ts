@@ -27,6 +27,10 @@ export const paths = {
     giaoVien: {
       path: '/giao-vien',
       getHref: () => '/giao-vien'
+    },
+    boDe: {
+      path: '/bo-de',
+      getHref: () => '/bo-de'
     }
   }
 } as const;
