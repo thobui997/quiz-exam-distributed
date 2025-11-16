@@ -1,24 +1,26 @@
 import { useNotification } from '@app/context/notification-context';
 
-import { DeleteOutlined, EditOutlined, PlusOutlined, ReloadOutlined, SaveOutlined } from '@ant-design/icons';
-import { useState } from 'react';
-import { Khoa } from '@app/shared/types/khoa.type';
-import { useCreateKhoaLopBatch, useUpdateKhoaLopBatch, useDeleteKhoaLopBatch } from '@app/features/khoa-lop/hooks';
+import { DeleteOutlined, EditOutlined, PlusOutlined, ReloadOutlined } from '@ant-design/icons';
+import {
+  useCreateKhoa,
+  useCreateLop,
+  useDeleteKhoa,
+  useDeleteLop,
+  useUpdateKhoa,
+  useUpdateLop
+} from '@app/features/khoa-lop/hooks';
 import { useKhoaList } from '@app/features/khoa-lop/hooks/get-khoa-list';
 import { useLopList } from '@app/features/khoa-lop/hooks/get-lop-list';
-import { KhoaLopRequest } from '@app/shared/types/khoa-lop.type';
+import { Khoa } from '@app/shared/types/khoa.type';
 import { Lop } from '@app/shared/types/lop.type';
-import { Form, Space, Button, Popconfirm, Tabs, Select, Table, Card, Input, Modal } from 'antd';
-
-interface KhoaWithLops extends Khoa {
-  lops: Lop[];
-}
+import { Button, Form, Input, Modal, Popconfirm, Select, Space, Table, Tabs } from 'antd';
+import { useState } from 'react';
 
 const KhoaLopManagement = () => {
   const [activeTab, setActiveTab] = useState('khoa');
   const notification = useNotification();
 
-  // ==================== KHOA TAB STATE ====================
+  // ==================== KHOA TAB STATE & HOOKS ====================
   const [isKhoaModalOpen, setIsKhoaModalOpen] = useState(false);
   const [editingKhoa, setEditingKhoa] = useState<Khoa | null>(null);
   const [selectedCSKhoa, setSelectedCSKhoa] = useState<string>('CS1');
@@ -26,7 +28,7 @@ const KhoaLopManagement = () => {
 
   const { data: khoaList, isLoading: isLoadingKhoa, refetch: refetchKhoa } = useKhoaList(selectedCSKhoa);
 
-  // ==================== LOP TAB STATE ====================
+  // ==================== LOP TAB STATE & HOOKS ====================
   const [isLopModalOpen, setIsLopModalOpen] = useState(false);
   const [editingLop, setEditingLop] = useState<Lop | null>(null);
   const [selectedCSLop, setSelectedCSLop] = useState<string>('CS1');
@@ -36,17 +38,14 @@ const KhoaLopManagement = () => {
   const { data: khoaListForLop, isLoading: isLoadingKhoaForLop } = useKhoaList(selectedCSLop);
   const { data: lopList, isLoading: isLoadingLop, refetch: refetchLop } = useLopList(selectedKhoaLop);
 
-  // ==================== BATCH TAB STATE ====================
-  const [selectedCSBatch, setSelectedCSBatch] = useState<string>('CS1');
-  const [khoaBatchList, setKhoaBatchList] = useState<KhoaWithLops[]>([]);
-  const [batchForm] = Form.useForm();
+  // ==================== SINGLE RECORD MUTATIONS ====================
 
-  const createBatchMutation = useCreateKhoaLopBatch({
+  const createKhoaMutation = useCreateKhoa({
     onSuccess: (data) => {
       if (data.status === 'SUCCESS') {
-        notification.showNotification('success', 'Thành công', 'Tạo khoa và lớp thành công!');
-        setKhoaBatchList([]);
-        batchForm.resetFields();
+        notification.showNotification('success', 'Thành công', 'Tạo khoa thành công!');
+        handleCloseKhoaModal();
+        refetchKhoa();
       } else {
         notification.showNotification('error', 'Thất bại', data.message);
       }
@@ -56,10 +55,12 @@ const KhoaLopManagement = () => {
     }
   });
 
-  const updateBatchMutation = useUpdateKhoaLopBatch({
+  const updateKhoaMutation = useUpdateKhoa({
     onSuccess: (data) => {
       if (data.status === 'SUCCESS') {
-        notification.showNotification('success', 'Thành công', 'Cập nhật khoa và lớp thành công!');
+        notification.showNotification('success', 'Thành công', 'Cập nhật khoa thành công!');
+        handleCloseKhoaModal();
+        refetchKhoa();
       } else {
         notification.showNotification('error', 'Thất bại', data.message);
       }
@@ -69,11 +70,55 @@ const KhoaLopManagement = () => {
     }
   });
 
-  const deleteBatchMutation = useDeleteKhoaLopBatch({
+  const deleteKhoaMutation = useDeleteKhoa({
     onSuccess: (data) => {
       if (data.status === 'SUCCESS') {
-        notification.showNotification('success', 'Thành công', 'Xóa khoa và lớp thành công!');
-        setKhoaBatchList([]);
+        notification.showNotification('success', 'Thành công', 'Xóa khoa thành công!');
+        refetchKhoa();
+      } else {
+        notification.showNotification('error', 'Thất bại', data.message);
+      }
+    },
+    onError: (error: any) => {
+      notification.showNotification('error', 'Thất bại', error?.response?.data?.message || 'Có lỗi xảy ra');
+    }
+  });
+
+  const createLopMutation = useCreateLop({
+    onSuccess: (data) => {
+      if (data.status === 'SUCCESS') {
+        notification.showNotification('success', 'Thành công', 'Tạo lớp thành công!');
+        handleCloseLopModal();
+        refetchLop();
+      } else {
+        notification.showNotification('error', 'Thất bại', data.message);
+      }
+    },
+    onError: (error: any) => {
+      notification.showNotification('error', 'Thất bại', error?.response?.data?.message || 'Có lỗi xảy ra');
+    }
+  });
+
+  const updateLopMutation = useUpdateLop({
+    onSuccess: (data) => {
+      if (data.status === 'SUCCESS') {
+        notification.showNotification('success', 'Thành công', 'Cập nhật lớp thành công!');
+        handleCloseLopModal();
+        refetchLop();
+      } else {
+        notification.showNotification('error', 'Thất bại', data.message);
+      }
+    },
+    onError: (error: any) => {
+      notification.showNotification('error', 'Thất bại', error?.response?.data?.message || 'Có lỗi xảy ra');
+    }
+  });
+
+  const deleteLopMutation = useDeleteLop({
+    onSuccess: (data) => {
+      if (data.status === 'SUCCESS') {
+        notification.showNotification('success', 'Thành công', 'Xóa lớp thành công!');
+        refetchLop();
       } else {
         notification.showNotification('error', 'Thất bại', data.message);
       }
@@ -85,6 +130,12 @@ const KhoaLopManagement = () => {
 
   // ==================== KHOA HANDLERS ====================
 
+  const handleOpenCreateKhoaModal = () => {
+    setEditingKhoa(null);
+    khoaForm.resetFields();
+    setIsKhoaModalOpen(true);
+  };
+
   const handleEditKhoa = (record: Khoa) => {
     setEditingKhoa(record);
     khoaForm.setFieldsValue({
@@ -94,13 +145,53 @@ const KhoaLopManagement = () => {
     setIsKhoaModalOpen(true);
   };
 
+  const handleDeleteKhoa = (record: Khoa) => {
+    deleteKhoaMutation.mutate({
+      maCS: selectedCSKhoa,
+      data: record
+    });
+  };
+
   const handleCloseKhoaModal = () => {
     setIsKhoaModalOpen(false);
     setEditingKhoa(null);
     khoaForm.resetFields();
   };
 
+  const handleCreateOrUpdateKhoa = () => {
+    khoaForm.validateFields().then((values) => {
+      const payload: Khoa = {
+        makh: values.makh,
+        tenkh: values.tenkh,
+        macs: selectedCSKhoa
+      };
+
+      if (editingKhoa) {
+        updateKhoaMutation.mutate({
+          maCS: selectedCSKhoa,
+          data: payload
+        });
+      } else {
+        createKhoaMutation.mutate({
+          maCS: selectedCSKhoa,
+          data: payload
+        });
+      }
+    });
+  };
+
   // ==================== LOP HANDLERS ====================
+
+  const handleOpenCreateLopModal = () => {
+    if (!selectedKhoaLop) {
+      notification.showNotification('warning', 'Cảnh báo', 'Vui lòng chọn khoa để thêm lớp!');
+      return;
+    }
+    setEditingLop(null);
+    lopForm.resetFields();
+    setIsLopModalOpen(true);
+  };
+
   const handleEditLop = (record: Lop) => {
     setEditingLop(record);
     lopForm.setFieldsValue({
@@ -108,6 +199,13 @@ const KhoaLopManagement = () => {
       tenlop: record.tenlop
     });
     setIsLopModalOpen(true);
+  };
+
+  const handleDeleteLop = (record: Lop) => {
+    deleteLopMutation.mutate({
+      maCS: selectedCSLop, // Lấy CS từ state Lớp đang xem
+      data: record
+    });
   };
 
   const handleCloseLopModal = () => {
@@ -121,97 +219,26 @@ const KhoaLopManagement = () => {
     setSelectedKhoaLop('');
   };
 
-  // ==================== BATCH HANDLERS ====================
-  const handleAddKhoaBatch = () => {
-    batchForm.validateFields(['newKhoaMa', 'newKhoaTen']).then((values) => {
-      const newKhoa: KhoaWithLops = {
-        makh: values.newKhoaMa,
-        tenkh: values.newKhoaTen,
-        macs: selectedCSBatch,
-        lops: []
+  const handleCreateOrUpdateLop = () => {
+    lopForm.validateFields().then((values) => {
+      const payload: Lop = {
+        malop: values.malop,
+        tenlop: values.tenlop,
+        makh: selectedKhoaLop
       };
-      setKhoaBatchList([...khoaBatchList, newKhoa]);
-      batchForm.setFieldsValue({ newKhoaMa: '', newKhoaTen: '' });
-    });
-  };
 
-  const handleRemoveKhoaBatch = (index: number) => {
-    const newList = [...khoaBatchList];
-    newList.splice(index, 1);
-    setKhoaBatchList(newList);
-  };
-
-  const handleAddLopBatch = (khoaIndex: number) => {
-    batchForm.validateFields([`lopMa_${khoaIndex}`, `lopTen_${khoaIndex}`]).then(() => {
-      const lopMa = batchForm.getFieldValue(`lopMa_${khoaIndex}`);
-      const lopTen = batchForm.getFieldValue(`lopTen_${khoaIndex}`);
-
-      if (!lopMa || !lopTen) {
-        notification.showNotification('warning', 'Cảnh báo', 'Vui lòng nhập đầy đủ mã và tên lớp!');
-        return;
+      if (editingLop) {
+        updateLopMutation.mutate({
+          maCS: selectedCSLop,
+          data: payload
+        });
+      } else {
+        createLopMutation.mutate({
+          maCS: selectedCSLop,
+          data: payload
+        });
       }
-
-      const newList = [...khoaBatchList];
-      const newLop: Lop = {
-        malop: lopMa,
-        tenlop: lopTen,
-        makh: newList[khoaIndex].makh
-      };
-      newList[khoaIndex].lops.push(newLop);
-      setKhoaBatchList(newList);
-      batchForm.setFieldsValue({ [`lopMa_${khoaIndex}`]: '', [`lopTen_${khoaIndex}`]: '' });
     });
-  };
-
-  const handleRemoveLopBatch = (khoaIndex: number, lopIndex: number) => {
-    const newList = [...khoaBatchList];
-    newList[khoaIndex].lops.splice(lopIndex, 1);
-    setKhoaBatchList(newList);
-  };
-
-  const handleCreateBatch = () => {
-    if (khoaBatchList.length === 0) {
-      notification.showNotification('warning', 'Cảnh báo', 'Vui lòng thêm ít nhất một khoa!');
-      return;
-    }
-
-    const payload: KhoaLopRequest = {
-      macs: selectedCSBatch,
-      listKhoa: khoaBatchList.map(({ lops, ...khoa }) => khoa),
-      listLop: khoaBatchList.flatMap((khoa) => khoa.lops)
-    };
-
-    createBatchMutation.mutate(payload);
-  };
-
-  const handleUpdateBatch = () => {
-    if (khoaBatchList.length === 0) {
-      notification.showNotification('warning', 'Cảnh báo', 'Vui lòng thêm ít nhất một khoa!');
-      return;
-    }
-
-    const payload: KhoaLopRequest = {
-      macs: selectedCSBatch,
-      listKhoa: khoaBatchList.map(({ lops, ...khoa }) => khoa),
-      listLop: khoaBatchList.flatMap((khoa) => khoa.lops)
-    };
-
-    updateBatchMutation.mutate(payload);
-  };
-
-  const handleDeleteBatch = () => {
-    if (khoaBatchList.length === 0) {
-      notification.showNotification('warning', 'Cảnh báo', 'Vui lòng thêm ít nhất một khoa để xóa!');
-      return;
-    }
-
-    const payload: KhoaLopRequest = {
-      macs: selectedCSBatch,
-      listKhoa: khoaBatchList.map(({ lops, ...khoa }) => khoa),
-      listLop: khoaBatchList.flatMap((khoa) => khoa.lops)
-    };
-
-    deleteBatchMutation.mutate(payload);
   };
 
   // ==================== COLUMNS ====================
@@ -245,6 +272,7 @@ const KhoaLopManagement = () => {
           <Popconfirm
             title='Xác nhận xóa'
             description='Bạn có chắc chắn muốn xóa khoa này?'
+            onConfirm={() => handleDeleteKhoa(record)}
             okText='Xóa'
             cancelText='Hủy'
             okButtonProps={{ danger: true }}
@@ -288,6 +316,7 @@ const KhoaLopManagement = () => {
           <Popconfirm
             title='Xác nhận xóa'
             description='Bạn có chắc chắn muốn xóa lớp này?'
+            onConfirm={() => handleDeleteLop(record)}
             okText='Xóa'
             cancelText='Hủy'
             okButtonProps={{ danger: true }}
@@ -297,36 +326,6 @@ const KhoaLopManagement = () => {
             </Button>
           </Popconfirm>
         </Space>
-      )
-    }
-  ];
-
-  const lopBatchColumns = (khoaIndex: number) => [
-    {
-      title: 'Mã lớp',
-      dataIndex: 'malop',
-      key: 'malop',
-      width: 150
-    },
-    {
-      title: 'Tên lớp',
-      dataIndex: 'tenlop',
-      key: 'tenlop'
-    },
-    {
-      title: 'Thao tác',
-      key: 'action',
-      width: 100,
-      render: (_: any, __: any, index: number) => (
-        <Button
-          type='link'
-          danger
-          icon={<DeleteOutlined />}
-          onClick={() => handleRemoveLopBatch(khoaIndex, index)}
-          size='small'
-        >
-          Xóa
-        </Button>
       )
     }
   ];
@@ -355,13 +354,16 @@ const KhoaLopManagement = () => {
               <Button icon={<ReloadOutlined />} onClick={() => refetchKhoa()}>
                 Tải lại
               </Button>
+              <Button type='primary' icon={<PlusOutlined />} onClick={handleOpenCreateKhoaModal}>
+                Thêm khoa
+              </Button>
             </Space>
           </div>
 
           <Table
             columns={khoaColumns}
             dataSource={khoaList}
-            loading={isLoadingKhoa}
+            loading={isLoadingKhoa || deleteKhoaMutation.isPending}
             rowKey='makh'
             pagination={{
               pageSize: 10,
@@ -400,6 +402,9 @@ const KhoaLopManagement = () => {
               <Button icon={<ReloadOutlined />} onClick={() => refetchLop()} disabled={!selectedKhoaLop}>
                 Tải lại
               </Button>
+              <Button type='primary' icon={<PlusOutlined />} onClick={handleOpenCreateLopModal}>
+                Thêm lớp
+              </Button>
             </Space>
           </div>
 
@@ -411,7 +416,7 @@ const KhoaLopManagement = () => {
             <Table
               columns={lopColumns}
               dataSource={lopList}
-              loading={isLoadingLop}
+              loading={isLoadingLop || deleteLopMutation.isPending}
               rowKey='malop'
               pagination={{
                 pageSize: 10,
@@ -421,128 +426,16 @@ const KhoaLopManagement = () => {
           )}
         </Tabs.TabPane>
 
-        {/* ==================== TAB BATCH ==================== */}
-        <Tabs.TabPane tab='Khoa - Lớp (Batch)' key='batch'>
-          <Card className='!mb-4'>
-            <div className='!mb-4'>
-              <label className='block text-sm font-medium !mb-2'>Cơ sở</label>
-              <Select
-                value={selectedCSBatch}
-                onChange={setSelectedCSBatch}
-                style={{ width: 200 }}
-                options={[
-                  { label: 'Cơ sở 1', value: 'CS1' },
-                  { label: 'Cơ sở 2', value: 'CS2' }
-                ]}
-              />
-            </div>
-
-            <Form form={batchForm} layout='inline'>
-              <Form.Item
-                name='newKhoaMa'
-                rules={[{ max: 8, message: 'Mã khoa không quá 8 ký tự!' }]}
-                style={{ marginBottom: 16 }}
-              >
-                <Input placeholder='Mã khoa' style={{ width: 150 }} />
-              </Form.Item>
-              <Form.Item
-                name='newKhoaTen'
-                rules={[{ max: 50, message: 'Tên khoa không quá 50 ký tự!' }]}
-                style={{ marginBottom: 16 }}
-              >
-                <Input placeholder='Tên khoa' style={{ width: 300 }} />
-              </Form.Item>
-              <Form.Item style={{ marginBottom: 16 }}>
-                <Button type='dashed' icon={<PlusOutlined />} onClick={handleAddKhoaBatch}>
-                  Thêm khoa
-                </Button>
-              </Form.Item>
-            </Form>
-          </Card>
-
-          <div className='space-y-4'>
-            {khoaBatchList.map((khoa, khoaIndex) => (
-              <Card
-                key={khoaIndex}
-                title={
-                  <div className='flex justify-between items-center'>
-                    <span>
-                      {khoa.makh} - {khoa.tenkh}
-                    </span>
-                    <Button
-                      type='link'
-                      danger
-                      icon={<DeleteOutlined />}
-                      onClick={() => handleRemoveKhoaBatch(khoaIndex)}
-                    >
-                      Xóa khoa
-                    </Button>
-                  </div>
-                }
-              >
-                <Form form={batchForm} layout='inline' className='!mb-4'>
-                  <Form.Item name={`lopMa_${khoaIndex}`} rules={[{ max: 15, message: 'Mã lớp không quá 15 ký tự!' }]}>
-                    <Input placeholder='Mã lớp' style={{ width: 150 }} />
-                  </Form.Item>
-                  <Form.Item name={`lopTen_${khoaIndex}`} rules={[{ max: 40, message: 'Tên lớp không quá 40 ký tự!' }]}>
-                    <Input placeholder='Tên lớp' style={{ width: 300 }} />
-                  </Form.Item>
-                  <Form.Item>
-                    <Button
-                      type='dashed'
-                      icon={<PlusOutlined />}
-                      onClick={() => handleAddLopBatch(khoaIndex)}
-                      size='small'
-                    >
-                      Thêm lớp
-                    </Button>
-                  </Form.Item>
-                </Form>
-
-                <Table
-                  columns={lopBatchColumns(khoaIndex)}
-                  dataSource={khoa.lops}
-                  rowKey='malop'
-                  pagination={false}
-                  size='small'
-                />
-              </Card>
-            ))}
-          </div>
-
-          {khoaBatchList.length > 0 && (
-            <Card className='!mt-4'>
-              <Space>
-                <Button
-                  type='primary'
-                  icon={<SaveOutlined />}
-                  onClick={handleCreateBatch}
-                  loading={createBatchMutation.isPending}
-                >
-                  Tạo mới
-                </Button>
-                {/* <Button icon={<SaveOutlined />} onClick={handleUpdateBatch} loading={updateBatchMutation.isPending}>
-                  Cập nhật
-                </Button>
-                <Button
-                  danger
-                  icon={<DeleteOutlined />}
-                  onClick={handleDeleteBatch}
-                  loading={deleteBatchMutation.isPending}
-                >
-                  Xóa
-                </Button> */}
-              </Space>
-            </Card>
-          )}
-        </Tabs.TabPane>
+        {/* ==================== TAB BATCH (ĐÃ BỊ LOẠI BỎ) ==================== */}
       </Tabs>
 
       {/* ==================== KHOA MODAL ==================== */}
       <Modal
         title={editingKhoa ? 'Cập nhật khoa' : 'Thêm khoa'}
         open={isKhoaModalOpen}
+        onOk={handleCreateOrUpdateKhoa}
         onCancel={handleCloseKhoaModal}
+        confirmLoading={createKhoaMutation.isPending || updateKhoaMutation.isPending}
         okText={editingKhoa ? 'Cập nhật' : 'Thêm'}
         cancelText='Hủy'
       >
@@ -575,7 +468,9 @@ const KhoaLopManagement = () => {
       <Modal
         title={editingLop ? 'Cập nhật lớp' : 'Thêm lớp'}
         open={isLopModalOpen}
+        onOk={handleCreateOrUpdateLop}
         onCancel={handleCloseLopModal}
+        confirmLoading={createLopMutation.isPending || updateLopMutation.isPending}
         okText={editingLop ? 'Cập nhật' : 'Thêm'}
         cancelText='Hủy'
       >
@@ -606,8 +501,9 @@ const KhoaLopManagement = () => {
             <Input
               value={khoaListForLop?.find((k) => k.makh === selectedKhoaLop)?.tenkh}
               disabled
-              placeholder='Khoa được chọn từ dropdown'
+              placeholder='Khoa: Tự động chọn'
             />
+            <Input type='hidden' value={selectedKhoaLop} />
           </Form.Item>
         </Form>
       </Modal>
