@@ -1,17 +1,17 @@
-import { useNotification } from '@app/context/notification-context';
-import { Button, Card, DatePicker, Form, Input, Modal, Popconfirm, Select, Space, Table, Tabs } from 'antd';
 import { DeleteOutlined, EditOutlined, PlusOutlined, ReloadOutlined } from '@ant-design/icons';
-import dayjs from 'dayjs';
-import { useState, useEffect } from 'react';
+import { useNotification } from '@app/context/notification-context';
 import { useKhoaList } from '@app/features/khoa-lop/hooks/get-khoa-list';
 import { useLopList } from '@app/features/khoa-lop/hooks/get-lop-list';
 import {
-  useSinhVienList,
   useCreateSinhVien,
-  useUpdateSinhVien,
-  useDeleteSinhVien
+  useDeleteSinhVien,
+  useSinhVienList,
+  useUpdateSinhVien
 } from '@app/features/sinh-vien/hooks';
 import { SinhVien } from '@app/shared/types/sinh-vien.type';
+import { Button, DatePicker, Form, Input, Modal, Popconfirm, Select, Space, Table, Tabs } from 'antd';
+import dayjs from 'dayjs';
+import { useEffect, useState } from 'react';
 
 const SinhVienManagement = () => {
   const [_, setActiveTab] = useState('view');
