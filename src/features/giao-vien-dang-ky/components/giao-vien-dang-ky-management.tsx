@@ -19,7 +19,7 @@ const GiaoVienDangKyManagement = () => {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [editingGiaoVienDangKy, setEditingGiaoVienDangKy] = useState<GiaoVienDangKy | null>(null);
   const [selectedCS, setSelectedCS] = useState<string>('CS1');
-  const [selectedKhoa, setSelectedKhoa] = useState<string>('');
+  const [_, setSelectedKhoa] = useState<string>('');
   const [selectedKhoaInModal, setSelectedKhoaInModal] = useState<string>('');
   const [form] = Form.useForm();
   const notification = useNotification();
