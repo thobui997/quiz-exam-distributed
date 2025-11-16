@@ -5,11 +5,10 @@ import {
   updateSinhVienBatchApi,
   deleteSinhVienBatchApi
 } from '@app/shared/api/sinh-vien.api';
-import { SinhVienBatchRequest } from '@app/shared/types/sinh-vien.type';
+import { SinhVien, SinhVienBatchRequest } from '@app/shared/types/sinh-vien.type';
 
 import { queryOptions, useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 
-// Query hook
 export const getSinhVienListQueryOptions = (maLop: string) => {
   return queryOptions({
     queryKey: ['sinh-vien', maLop],
@@ -22,21 +21,39 @@ export const useSinhVienList = (maLop: string) => {
   return useQuery(getSinhVienListQueryOptions(maLop));
 };
 
-// Mutation hooks
-export const useCreateSinhVienBatch = (mutationConfig?: MutationConfig<typeof createSinhVienBatchApi>) => {
+type CreateSinhVienPayload = {
+  maCS: string;
+  data: SinhVien;
+};
+
+type UpdateSinhVienPayload = {
+  maCS: string;
+  data: SinhVien;
+};
+
+type DeleteSinhVienPayload = {
+  maCS: string;
+  sinhVien: SinhVien;
+};
+
+export const useCreateSinhVien = (
+  mutationConfig?: MutationConfig<(payload: CreateSinhVienPayload) => Promise<any>>
+) => {
   const queryClient = useQueryClient();
 
   const { onSuccess, ...restConfig } = mutationConfig || {};
 
   return useMutation({
-    mutationFn: (payload: SinhVienBatchRequest) => createSinhVienBatchApi(payload),
+    mutationFn: ({ maCS, data }: CreateSinhVienPayload) => {
+      const payload: SinhVienBatchRequest = {
+        macs: maCS,
+        listSinhVien: [data]
+      };
+      return createSinhVienBatchApi(payload);
+    },
     onSuccess: (data, variables, ...args) => {
-      // Get unique malop from listSinhVien
-      const uniqueMaLop = [...new Set(variables.listSinhVien.map((sv) => sv.malop))];
-      uniqueMaLop.forEach((malop) => {
-        queryClient.invalidateQueries({
-          queryKey: ['sinh-vien', malop]
-        });
+      queryClient.invalidateQueries({
+        queryKey: ['sinh-vien', variables.data.malop]
       });
       onSuccess?.(data, variables, ...args);
     },
@@ -44,19 +61,25 @@ export const useCreateSinhVienBatch = (mutationConfig?: MutationConfig<typeof cr
   });
 };
 
-export const useUpdateSinhVienBatch = (mutationConfig?: MutationConfig<typeof updateSinhVienBatchApi>) => {
+export const useUpdateSinhVien = (
+  mutationConfig?: MutationConfig<(payload: UpdateSinhVienPayload) => Promise<any>>
+) => {
   const queryClient = useQueryClient();
 
   const { onSuccess, ...restConfig } = mutationConfig || {};
 
   return useMutation({
-    mutationFn: (payload: SinhVienBatchRequest) => updateSinhVienBatchApi(payload),
+    mutationFn: ({ maCS, data }: UpdateSinhVienPayload) => {
+      const payload: SinhVienBatchRequest = {
+        macs: maCS,
+        listSinhVien: [data]
+      };
+      return updateSinhVienBatchApi(payload);
+    },
     onSuccess: (data, variables, ...args) => {
-      const uniqueMaLop = [...new Set(variables.listSinhVien.map((sv) => sv.malop))];
-      uniqueMaLop.forEach((malop) => {
-        queryClient.invalidateQueries({
-          queryKey: ['sinh-vien', malop]
-        });
+      // Invalidate query của lớp vừa được cập nhật
+      queryClient.invalidateQueries({
+        queryKey: ['sinh-vien', variables.data.malop]
       });
       onSuccess?.(data, variables, ...args);
     },
@@ -64,19 +87,24 @@ export const useUpdateSinhVienBatch = (mutationConfig?: MutationConfig<typeof up
   });
 };
 
-export const useDeleteSinhVienBatch = (mutationConfig?: MutationConfig<typeof deleteSinhVienBatchApi>) => {
+export const useDeleteSinhVien = (
+  mutationConfig?: MutationConfig<(payload: DeleteSinhVienPayload) => Promise<any>>
+) => {
   const queryClient = useQueryClient();
 
   const { onSuccess, ...restConfig } = mutationConfig || {};
 
   return useMutation({
-    mutationFn: (payload: SinhVienBatchRequest) => deleteSinhVienBatchApi(payload),
+    mutationFn: ({ maCS, sinhVien }: DeleteSinhVienPayload) => {
+      const payload: SinhVienBatchRequest = {
+        macs: maCS,
+        listSinhVien: [sinhVien]
+      };
+      return deleteSinhVienBatchApi(payload);
+    },
     onSuccess: (data, variables, ...args) => {
-      const uniqueMaLop = [...new Set(variables.listSinhVien.map((sv) => sv.malop))];
-      uniqueMaLop.forEach((malop) => {
-        queryClient.invalidateQueries({
-          queryKey: ['sinh-vien', malop]
-        });
+      queryClient.invalidateQueries({
+        queryKey: ['sinh-vien', variables.sinhVien.malop]
       });
       onSuccess?.(data, variables, ...args);
     },
