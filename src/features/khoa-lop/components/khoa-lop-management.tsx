@@ -4,8 +4,8 @@ import { DeleteOutlined, EditOutlined, PlusOutlined, ReloadOutlined, SaveOutline
 import { useState } from 'react';
 import { Khoa } from '@app/shared/types/khoa.type';
 import { useCreateKhoaLopBatch, useUpdateKhoaLopBatch, useDeleteKhoaLopBatch } from '@app/features/khoa-lop/hooks';
-import { useKhoaList } from '@app/features/khoa/hooks/get-khoa-list';
-import { useLopList } from '@app/features/lop/hooks/get-lop-list';
+import { useKhoaList } from '@app/features/khoa-lop/hooks/get-khoa-list';
+import { useLopList } from '@app/features/khoa-lop/hooks/get-lop-list';
 import { KhoaLopRequest } from '@app/shared/types/khoa-lop.type';
 import { Lop } from '@app/shared/types/lop.type';
 import { Form, Space, Button, Popconfirm, Tabs, Select, Table, Card, Input, Modal } from 'antd';
