@@ -1,5 +1,5 @@
 import { useAuth } from '@app/context/auth-context';
-import { Button, Form, Input, Select } from 'antd';
+import { Button, Form, Input } from 'antd';
 import { useNavigate } from 'react-router';
 
 const LoginForm = () => {

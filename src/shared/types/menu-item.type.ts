@@ -1,5 +1,5 @@
+import { UserRoleEnumType } from '@app/shared/enums';
 import { ReactNode } from 'react';
-import { RoleEnumType } from '../enums';
 
 interface MenuItem {
   code: string;
@@ -7,7 +7,7 @@ interface MenuItem {
   path: string;
   icon?: ReactNode;
   children?: MenuItem[];
-  roles?: RoleEnumType[];
+  roles?: UserRoleEnumType[];
 }
 
 export type MenuChild = Omit<MenuItem, 'children'>;

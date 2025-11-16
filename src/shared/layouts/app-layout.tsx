@@ -1,6 +1,6 @@
 import menuList from '@app/config/menu';
 import { useAuth } from '@app/context/auth-context';
-import { Affix, Avatar, Button, Dropdown, Layout, Space, theme } from 'antd';
+import { Affix, Avatar, Dropdown, Layout, Space, theme } from 'antd';
 import { LogOut, User } from 'lucide-react';
 import { useMemo, useState } from 'react';
 import { Outlet, useLocation } from 'react-router';

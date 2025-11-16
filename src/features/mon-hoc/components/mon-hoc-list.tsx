@@ -24,7 +24,7 @@ const MonHocList = () => {
   });
 
   const updateMHMutation = useUpdateMonHoc({
-    onSuccess: (data) => {
+    onSuccess: () => {
       notification.showNotification('success', 'Thành công', 'Cập nhật môn học thành công!');
       setIsModalOpen(false);
       setEditingMonHoc(null);
@@ -36,7 +36,7 @@ const MonHocList = () => {
   });
 
   const deleteMHMutation = useDeleteMonHoc({
-    onSuccess: (data) => {
+    onSuccess: () => {
       notification.showNotification('success', 'Thành công', 'Xóa môn học thành công!');
     },
     onError: (error: any) => {

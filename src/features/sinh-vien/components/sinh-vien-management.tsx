@@ -7,14 +7,14 @@ import { useKhoaList } from '@app/features/khoa-lop/hooks/get-khoa-list';
 import { useLopList } from '@app/features/khoa-lop/hooks/get-lop-list';
 import {
   useSinhVienList,
-  useCreateSinhVien, // Đã thay đổi
-  useUpdateSinhVien, // Đã thay đổi
-  useDeleteSinhVien // Đã thay đổi
+  useCreateSinhVien,
+  useUpdateSinhVien,
+  useDeleteSinhVien
 } from '@app/features/sinh-vien/hooks';
 import { SinhVien } from '@app/shared/types/sinh-vien.type';
 
 const SinhVienManagement = () => {
-  const [activeTab, setActiveTab] = useState('view');
+  const [_, setActiveTab] = useState('view');
   const notification = useNotification();
 
   // ==================== STATE ====================
