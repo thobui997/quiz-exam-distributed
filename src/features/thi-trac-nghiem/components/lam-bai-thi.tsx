@@ -161,7 +161,7 @@ const LamBaiThi = ({ cauHoiList, thongTinThi, onSubmit }: LamBaiThiProps) => {
               direction='vertical'
               size='small'
               current={currentIndex}
-              items={cauHoiList.map((ch, index) => ({
+              items={cauHoiList.map((_, index) => ({
                 title: `Câu ${index + 1}`,
                 status: getStepStatus(index),
                 className: 'cursor-pointer',
