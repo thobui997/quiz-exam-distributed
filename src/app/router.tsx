@@ -6,6 +6,7 @@ import LoginRoute from '@app/app/pages/login-route';
 import MonHocRoute from '@app/app/pages/mon-hoc-route';
 import RegisterRoute from '@app/app/pages/register-route';
 import SinhVienRoute from '@app/app/pages/sinh-vien-route';
+import ThiTracNghiemRoute from '@app/app/pages/thi-trac-nghiem-route';
 import { paths } from '@app/config/paths';
 import { useAuth } from '@app/context/auth-context';
 import AppLayout from '@app/shared/layouts/app-layout';
@@ -37,6 +38,7 @@ export const AppRouter = () => {
           <Route path={paths.app.giaoVien.path} element={<GiaoVienRoute />} />
           <Route path={paths.app.boDe.path} element={<BoDeRoute />} />
           <Route path={paths.app.giaoVienDangKy.path} element={<GiaoVienDangKyRoute />} />
+          <Route path={paths.app.thiTracNghiem.path} element={<ThiTracNghiemRoute />} />
         </Route>
       </Route>
     </Routes>

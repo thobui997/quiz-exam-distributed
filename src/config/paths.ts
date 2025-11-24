@@ -35,6 +35,10 @@ export const paths = {
     giaoVienDangKy: {
       path: '/giao-vien-dang-ky',
       getHref: () => '/giao-vien-dang-ky'
+    },
+    thiTracNghiem: {
+      path: '/thi-trac-nghiem',
+      getHref: () => '/thi-trac-nghiem'
     }
   }
 } as const;
