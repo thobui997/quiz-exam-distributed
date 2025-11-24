@@ -4,7 +4,6 @@ import { useBangDiem } from '@app/features/bang-diem/hooks';
 import { useKhoaList } from '@app/features/khoa-lop/hooks/get-khoa-list';
 import { useLopList } from '@app/features/khoa-lop/hooks/get-lop-list';
 import { useMonHocList } from '@app/features/mon-hoc/hooks';
-import { BangDiem } from '@app/shared/types/bang-diem.type';
 import { Button, Card, Form, InputNumber, Select, Space, Table } from 'antd';
 import { useState } from 'react';
 
