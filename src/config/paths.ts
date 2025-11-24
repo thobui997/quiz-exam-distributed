@@ -43,6 +43,10 @@ export const paths = {
     bangDiem: {
       path: '/bang-diem',
       getHref: () => '/bang-diem'
+    },
+    baoCaoDangKy: {
+      path: '/bao-cao-dang-ky',
+      getHref: () => '/bao-cao-dang-ky'
     }
   }
 } as const;

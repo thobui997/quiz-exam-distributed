@@ -8,7 +8,8 @@ import {
   ClipboardList,
   FileQuestion,
   PenTool,
-  Award
+  Award,
+  FileText
 } from 'lucide-react';
 import React from 'react';
 
@@ -60,6 +61,12 @@ const menuList: MenuList = [
     label: 'Xem điểm thi',
     path: paths.app.bangDiem.path,
     icon: React.createElement(Award, { size: 20 })
+  },
+  {
+    code: paths.app.baoCaoDangKy.path,
+    label: 'Báo cáo đăng ký thi',
+    path: paths.app.baoCaoDangKy.path,
+    icon: React.createElement(FileText, { size: 20 })
   }
 ];
 

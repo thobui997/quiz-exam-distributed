@@ -1,4 +1,5 @@
 import BangDiemRoute from '@app/app/pages/bang-diem-route';
+import BaoCaoDangKyRoute from '@app/app/pages/bao-cao-dang-ky-route';
 import BoDeRoute from '@app/app/pages/bo-de-route';
 import GiaoVienDangKyRoute from '@app/app/pages/giao-vien-dang-ky-route';
 import GiaoVienRoute from '@app/app/pages/giao-vien-route';
@@ -41,6 +42,7 @@ export const AppRouter = () => {
           <Route path={paths.app.giaoVienDangKy.path} element={<GiaoVienDangKyRoute />} />
           <Route path={paths.app.thiTracNghiem.path} element={<ThiTracNghiemRoute />} />
           <Route path={paths.app.bangDiem.path} element={<BangDiemRoute />} />
+          <Route path={paths.app.baoCaoDangKy.path} element={<BaoCaoDangKyRoute />} />
         </Route>
       </Route>
     </Routes>
