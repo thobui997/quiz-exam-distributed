@@ -5,6 +5,9 @@ import { useMonHocList } from '@app/features/mon-hoc/hooks';
 import { CauHoiThi, ThongTinThi } from '@app/shared/types/thi-trac-nghiem.type';
 import { Button, Card, Form, InputNumber, Select } from 'antd';
 import { useState } from 'react';
+import { useLopList } from '@app/features/khoa-lop/hooks/get-lop-list';
+import { useKhoaList } from '@app/features/khoa-lop/hooks/get-khoa-list';
+import { useSinhVienList } from '@app/features/sinh-vien/hooks';
 
 interface ThongTinThiFormProps {
   onStartExam: (cauHoiList: CauHoiThi[], thongTinThi: ThongTinThi) => void;
@@ -13,9 +16,14 @@ interface ThongTinThiFormProps {
 const ThongTinThiForm = ({ onStartExam }: ThongTinThiFormProps) => {
   const [form] = Form.useForm();
   const [selectedCS, setSelectedCS] = useState<string>('CS1');
+  const [selectedKhoa, setSelectedKhoa] = useState<string>('');
+  const [selectedLop, setSelectedLop] = useState<string>('');
   const notification = useNotification();
 
   const { data: giaoVienList, isLoading: isLoadingGiaoVien } = useGiaoVienList(selectedCS);
+  const { data: khoaList, isLoading: isLoadingKhoa } = useKhoaList(selectedCS);
+  const { data: lopList, isLoading: isLoadingLop } = useLopList(selectedKhoa);
+  const { data: sinhVienList, isLoading: isLoadingSinhVien } = useSinhVienList(selectedLop);
   const { data: monHocList, isLoading: isLoadingMonHoc } = useMonHocList();
 
   const getBoDeThiMutation = useGetBoDeThi({
@@ -30,7 +38,7 @@ const ThongTinThiForm = ({ onStartExam }: ThongTinThiFormProps) => {
           macs: selectedCS,
           thoigian: values.thoigian,
           masv: values.masv,
-          malop: values.malop,
+          malop: selectedLop,
           lan: values.lan
         };
         onStartExam(data, thongTinThi);
@@ -56,6 +64,31 @@ const ThongTinThiForm = ({ onStartExam }: ThongTinThiFormProps) => {
     });
   };
 
+  const handleCSChange = (value: string) => {
+    setSelectedCS(value);
+    setSelectedKhoa('');
+    setSelectedLop('');
+    form.setFieldsValue({
+      makh: undefined,
+      malop: undefined,
+      masv: undefined
+    });
+  };
+
+  const handleKhoaChange = (value: string) => {
+    setSelectedKhoa(value);
+    setSelectedLop('');
+    form.setFieldsValue({
+      malop: undefined,
+      masv: undefined
+    });
+  };
+
+  const handleLopChange = (value: string) => {
+    setSelectedLop(value);
+    form.setFieldsValue({ masv: undefined });
+  };
+
   return (
     <div className='flex justify-center items-center min-h-[80vh]'>
       <Card title='Thông tin bài thi' className='w-full max-w-2xl shadow-lg'>
@@ -63,7 +96,7 @@ const ThongTinThiForm = ({ onStartExam }: ThongTinThiFormProps) => {
           <Form.Item label='Cơ sở'>
             <Select
               value={selectedCS}
-              onChange={setSelectedCS}
+              onChange={handleCSChange}
               options={[
                 { label: 'Cơ sở 1', value: 'CS1' },
                 { label: 'Cơ sở 2', value: 'CS2' }
@@ -71,29 +104,45 @@ const ThongTinThiForm = ({ onStartExam }: ThongTinThiFormProps) => {
             />
           </Form.Item>
 
-          <Form.Item
-            label='Mã sinh viên'
-            name='masv'
-            rules={[{ required: true, message: 'Vui lòng nhập mã sinh viên!' }]}
-          >
+          <Form.Item label='Khoa' name='makh' rules={[{ required: true, message: 'Vui lòng chọn khoa!' }]}>
             <Select
-              placeholder='Chọn mã sinh viên'
-              showSearch
-              optionFilterProp='label'
-              options={[
-                { label: 'SV001 - Nguyễn Văn A', value: 'SV001' },
-                { label: 'SV002 - Trần Thị B', value: 'SV002' }
-              ]}
+              value={selectedKhoa}
+              onChange={handleKhoaChange}
+              placeholder='Chọn khoa'
+              loading={isLoadingKhoa}
+              disabled={!khoaList || khoaList.length === 0}
+              options={khoaList?.map((khoa) => ({
+                label: `${khoa.makh} - ${khoa.tenkh}`,
+                value: khoa.makh
+              }))}
             />
           </Form.Item>
 
-          <Form.Item label='Mã lớp' name='malop' rules={[{ required: true, message: 'Vui lòng nhập mã lớp!' }]}>
+          <Form.Item label='Lớp' name='malop' rules={[{ required: true, message: 'Vui lòng chọn lớp!' }]}>
             <Select
+              value={selectedLop}
+              onChange={handleLopChange}
               placeholder='Chọn lớp'
-              options={[
-                { label: 'L001 - Lớp CNTT K1', value: 'L001' },
-                { label: 'L002 - Lớp CNTT K2', value: 'L002' }
-              ]}
+              loading={isLoadingLop}
+              disabled={!selectedKhoa || !lopList || lopList.length === 0}
+              options={lopList?.map((lop) => ({
+                label: `${lop.malop} - ${lop.tenlop}`,
+                value: lop.malop
+              }))}
+            />
+          </Form.Item>
+
+          <Form.Item label='Sinh viên' name='masv' rules={[{ required: true, message: 'Vui lòng chọn sinh viên!' }]}>
+            <Select
+              placeholder='Chọn sinh viên'
+              loading={isLoadingSinhVien}
+              disabled={!selectedLop || !sinhVienList || sinhVienList.length === 0}
+              showSearch
+              optionFilterProp='label'
+              options={sinhVienList?.map((sv) => ({
+                label: `${sv.masv} - ${sv.ho} ${sv.ten}`,
+                value: sv.masv
+              }))}
             />
           </Form.Item>
 
