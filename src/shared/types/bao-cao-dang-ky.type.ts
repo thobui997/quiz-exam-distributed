@@ -2,11 +2,12 @@ export interface BaoCaoDangKyItem {
   stt: number;
   tenlop: string;
   tenmh: string;
-  tenGiangVien: string;
+  giangvien_dangky: string;
   socauthi: number;
   ngaythi: string;
   dathi: boolean;
-  ghichu: string;
+  macs: string;
+  ghichu?: string;
 }
 
 export interface BaoCaoDangKyCoSo {
@@ -21,7 +22,14 @@ export interface GetBaoCaoDangKyRequest {
   denngay: string;
 }
 
+// API response structure
+export interface BaoCaoDangKyApiResponse {
+  cs1: BaoCaoDangKyItem[];
+  cs2: BaoCaoDangKyItem[];
+}
+
+// Transformed response
 export interface BaoCaoDangKyResponse {
-  coSo1: BaoCaoDangKyCoSo;
-  coSo2: BaoCaoDangKyCoSo;
+  coSo1: BaoCaoDangKyCoSo | null;
+  coSo2: BaoCaoDangKyCoSo | null;
 }

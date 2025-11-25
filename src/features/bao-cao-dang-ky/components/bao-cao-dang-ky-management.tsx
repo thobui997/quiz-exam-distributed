@@ -58,8 +58,8 @@ const BaoCaoDangKyManagement = () => {
     },
     {
       title: 'GIẢNG VIÊN ĐĂNG KÝ',
-      dataIndex: 'tenGiangVien',
-      key: 'tenGiangVien',
+      dataIndex: 'giangvien_dangky',
+      key: 'giangvien_dangky',
       width: 200
     },
     {

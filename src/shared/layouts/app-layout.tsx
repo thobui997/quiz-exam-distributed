@@ -6,6 +6,7 @@ import { useMemo, useState } from 'react';
 import { Outlet, useLocation } from 'react-router';
 import './app-layout.scss';
 import MenuComponent from './menu';
+import { UserOutlined } from '@ant-design/icons';
 
 const { Content, Header, Sider } = Layout;
 
@@ -24,11 +25,21 @@ const AppLayout = () => {
   }
 
   const filteredMenuList = useMemo(() => {
-    return menuList.map((item) => ({
-      ...item,
-      children: item.children
-    }));
-  }, []);
+    if (!userInfo?.userRole) return [];
+
+    return menuList
+      .filter((item) => {
+        if (!item.roles || item.roles.length === 0) return true;
+        return item.roles.includes(userInfo.userRole);
+      })
+      .map((item) => ({
+        ...item,
+        children: item.children?.filter((child) => {
+          if (!child.roles || child.roles.length === 0) return true;
+          return child.roles.includes(userInfo.userRole);
+        })
+      }));
+  }, [userInfo?.userRole]);
 
   const userMenuItems = [
     {
@@ -89,13 +100,23 @@ const AppLayout = () => {
           <div className='layout-page-header-actions'>
             <Dropdown menu={{ items: userMenuItems }} placement='bottomRight'>
               <Space className='cursor-pointer'>
-                <Avatar style={{ backgroundColor: '#87d068' }}>
-                  {userInfo?.ho?.charAt(0)}
-                  {userInfo?.ten?.charAt(0)}
-                </Avatar>
-                <span className='font-medium'>
-                  {userInfo?.ho} {userInfo?.ten}
-                </span>
+                <Avatar style={{ backgroundColor: '#87d068' }} icon={<UserOutlined />} />
+                <div className='flex flex-col items-start'>
+                  <p className='font-medium'>
+                    {userInfo?.ho} {userInfo?.ten} -
+                    <span className='text-xs text-gray-500'>
+                      (
+                      {userInfo?.userRole === 'TRUONG'
+                        ? 'Trường'
+                        : userInfo?.userRole === 'COSO'
+                          ? 'Cơ sở'
+                          : userInfo?.userRole === 'GIAOVIEN'
+                            ? 'Giảng viên'
+                            : 'Sinh viên'}
+                      )
+                    </span>
+                  </p>
+                </div>
               </Space>
             </Dropdown>
           </div>
